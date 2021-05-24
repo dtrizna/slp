@@ -21,7 +21,7 @@ print(command_counter.most_common(5))
 ('-type', 3403)]
 """
 
-encoder = ShellEncoder(corpus, counter, top_tokens=500, verbose=False)
+encoder = ShellEncoder(command_corpus, command_counter, top_tokens=500, verbose=False)
 X_tfidf = encoder.tfidf()
 # shape: (commands, top_tokens)
 print(X_tfidf.shape)
