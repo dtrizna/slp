@@ -174,13 +174,13 @@ class Parser():
         return self.global_counter, self.corpus
     
     def encode(self, mode='onehot', corpus=None, token_counter=None, top_tokens=100, pad_width=None):
+        corpus = corpus if corpus else self.corpus
+        if not token_counter:
+            token_counter = self.global_counter if self.global_counter else Counter([y for x in corpus for y in x])
         if not corpus or not token_counter:
-            corpus = self.corpus
-            token_counter = self.global_counter
-            if not corpus or not token_counter:
-                raise Exception("[!] Please specify your corpus or use Parser().tokenize() to build it beforehand!")
-
+            raise Exception("[!] Please specify your corpus or use Parser().tokenize() to build it beforehand!")
         l = len(corpus)
+        
         if mode == 'tf-idf':
             
             # can't use sklearn, as it performs it's own tokenization
