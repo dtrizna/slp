@@ -10,7 +10,7 @@ We performed evaluation of tokenization quality in comparison with alternatives 
 
 Assessment done on the security classification problem, where we train an ML model to distinguish malicious command samples from benign activity. 
 
-Legitimate commands `data/nl2bash.cm` consist from [nl2bash](https://arxiv.org/abs/1802.08979) dataset. Original data can be found [here](https://github.com/TellinaTool/nl2bash).
+Legitimate commands `data/nl2bash.cm` consist of [nl2bash](https://arxiv.org/abs/1802.08979) dataset. Original data can be found [here](https://github.com/TellinaTool/nl2bash).
 
 Malicious examples `data/malicious.cm` were collected from various Penetration Testing resources and scripts, some examples:
 
@@ -18,20 +18,19 @@ Malicious examples `data/malicious.cm` were collected from various Penetration T
 - [LinEnum.sh Script](https://github.com/rebootuser/LinEnum/blob/master/LinEnum.sh)
 - [Linux Privilege Escalation Guide](https://blog.g0tmi1k.com/2011/08/basic-linux-privilege-escalation/)
 
-All commands are normalized: domain names are replaced by *example.com* and all IP addresses with *1.1.1.1*, since we specific hostname or address do not represent maliciousness, on the contrary to the command functionality.
+All commands are normalized: domain names are replaced by *example.com* and all IP addresses with *1.1.1.1*, sot the evaluation focuses on the command syntactic structure. For practical realisations we suggest to perform similar normalization, to avoid overfitting to a specific hostnames or addresses. Maliciousness checks of IP addresses or hostnames can be performed separately in a manual manner using something like [GreyNoise API](https://github.com/GreyNoise-Intelligence/api.greynoise.io). 
 
 For classification we train a gradient boosting ensemble of decision trees, with the specific realization from [XGBoost](https://xgboost.readthedocs.io/en/latest/).
 
 Results:
 
-Tokenizer | AUC | F1 | Precision | Recall
+Tokenizer | AUC | Precision | Recall | F1 
 --- | --- | --- | --- | ---
-*SLP (ours)* | **0.994** | **0.874** | 0.980 | **0.789**
-*WordPunct* | 0.988 | 0.392 | **1.0** | 0.244
-*WhiteSpace* | 0.942 | 0.164 | **1.0** | 0.089
+*SLP (ours)* | **0.994** | 0.980 | **0.789** | **0.874**
+*WordPunct* | 0.988 | **1.0** | 0.244 | 0.392
+*WhiteSpace* | 0.942 | **1.0** | 0.089 | 0.164
 
-Experiments can be replicated in [this notebook](https://github.com/dtrizna/slp/blob/main/examples/security_classification.ipynb).
-
+Experiments can be observed or replicated in [this notebook](https://github.com/dtrizna/slp/blob/main/examples/security_classification.ipynb).
 
     
 ## Example usage
