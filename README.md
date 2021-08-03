@@ -52,7 +52,7 @@ If you are inspired, and you develop these ideas further or use parts of code in
 
 # Example usage
 
-## Code sample:
+## Code sample
 
 ```python
 from slp import ShellTokenizer, ShellEncoder
