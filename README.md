@@ -2,9 +2,10 @@
 
 SLP provides a tokenization and encoder classes for parsing of Unix/Linux shell commands, so raw commands (e.g. from `auditd` logs or bash history) can be used for Machine Learning purposes.
 
-<p align="center"><img src="img/Tux_wordcloud.png" alt="WordCloud of most common elements" width="200"/>
-
 :warning: This is Proof-of-Concept (PoC) realization, pre-alpha software.
+
+<p align="center"><img src="img/Tux_wordcloud.png" alt="WordCloud of most common elements" width="250"/>
+
 
 # Evaluation
 
