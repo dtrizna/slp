@@ -4,7 +4,7 @@ SLP provides a tokenization and encoder classes for parsing of Unix/Linux shell 
 
 <p align="center"><img src="img/Tux_wordcloud.png" alt="WordCloud of most common elements" width="200"/>
 
-:warning: Consider this code as Proof-of-Concept (PoC) realization, in an early alpha state, the library is not tested enough. Be aware if used for production environment!
+:warning: This is Proof-of-Concept (PoC) realization, pre-alpha software.
 
 # Evaluation
 
@@ -51,6 +51,8 @@ If you are inspired, and you develop these ideas further or use parts of code in
 
 # Example usage
 
+## Code sample:
+
 ```python
 from slp import ShellTokenizer, ShellEncoder
 
@@ -93,6 +95,22 @@ At this point data is ready to be supplied as input for your ML model:
 ```python
 mymodel.fit(X_tfidf, y)
 ```
+
+## Execute within a Docker :whale: environment
+
+SLP is available via the [Docker Hub](https://hub.docker.com/repository/docker/dtrizna/slp). 
+
+Evaluate your code from within docker container as follows:
+
+```
+% docker run -it -d dtrizna/slp bash
+% CONTAINER=$(docker ps | grep slp | awk '{print $1}')
+% docker cp /local/path/to/code.py $CONTAINER:/code.py
+% docker exec -ti $CONTAINER python /code.py
+
+    [[0.20273255 0.20273255 0.         ...         0.        ]
+    [0.         ...         0.13515504 0.13515504 0.13515504]]
+ ```
 
 # Additional notes
 
