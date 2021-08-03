@@ -2,9 +2,11 @@
 
 SLP provides a tokenization and encoder classes for parsing of Unix/Linux shell commands, so raw commands (e.g. from `auditd` logs or bash history) can be used for Machine Learning purposes.
 
-<p align="center"><img src="img/Tux_wordcloud.png" alt="WordCloud of most common elements" width="300"/>
+<p align="center"><img src="img/Tux_wordcloud.png" alt="WordCloud of most common elements" width="200"/>
 
-## Evaluation
+:warning: Consider this code as Proof-of-Concept (PoC) realization, in an early alpha state, the library is not tested enough. Be aware if used for production environment!
+
+# Evaluation
 
 We performed evaluation of tokenization quality in comparison with alternatives from NLTK's *WordPunctTokenizer* and *WhiteSpaceTokenizer*, which known to be used in industry for IT log parsing.
 
@@ -32,8 +34,22 @@ For classification we train a gradient boosting ensemble of decision trees, with
 
 Experiments can be observed or replicated in [this notebook](https://github.com/dtrizna/slp/blob/main/examples/security_classification.ipynb).
 
-    
-## Example usage
+# Citation
+
+If you are inspired, and you develop these ideas further or use parts of code in your own research, please cite us:
+
+```
+@misc{trizna2021shell,
+      title={Shell Language Processing: Unix command parsing for Machine Learning}, 
+      author={Dmitrijs Trizna},
+      year={2021},
+      eprint={2107.02438},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
+}
+```
+
+# Example usage
 
 ```python
 from slp import ShellTokenizer, ShellEncoder
@@ -78,7 +94,7 @@ At this point data is ready to be supplied as input for your ML model:
 mymodel.fit(X_tfidf, y)
 ```
 
-## Additional notes
+# Additional notes
 
 - Tokenization heavily depends on [bashlex](https://github.com/idank/bashlex) library, but implements additional wrapping for problematic cases.
 
