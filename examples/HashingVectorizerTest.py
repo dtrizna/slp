@@ -30,7 +30,7 @@ X_raw = benign + malicious
 y = np.array([0] * len(benign) + [1] * len(malicious), dtype=int)
 
 from sklearn.feature_extraction.text import HashingVectorizer
-from slpv2 import ShellTokenizer
+from ..slp import ShellTokenizer
 
 #aa,bb = ShellTokenizer(verbose=True, debug=False).tokenize(X_raw)
 
