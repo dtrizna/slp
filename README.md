@@ -60,6 +60,7 @@ If you are inspired, and you develop these ideas further or use parts of code in
       title={Shell Language Processing: Unix command parsing for Machine Learning}, 
       author={Dmitrijs Trizna},
       year={2021},
+      howpublished={In Proceedings of Conference on Applied Machine Learning for Information Security (CAMLIS '21)},
       eprint={2107.02438},
       archivePrefix={arXiv},
       primaryClass={cs.LG}
