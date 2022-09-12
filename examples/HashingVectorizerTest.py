@@ -1,11 +1,10 @@
 # NumPy: "The fundamental package for scientific computing with Python"
 # allows to work with vectors, matrices, etc., aka Linear Algebra
-from tabnanny import verbose
 import numpy as np
 
 # packages needed to fetch data
 import io
-import os
+import re
 import zipfile
 import requests
 
@@ -42,10 +41,14 @@ hv = HashingVectorizer(
 )
 aa = hv.fit_transform(X_raw)
 
-# works 2
+# works 2 -- w/ IP ADDRESS NORMALIZATION
 hv2 = HashingVectorizer(
     lowercase=False,
-    tokenizer=ShellTokenizer(verbose=False, debug=True).tokenize_command
+    tokenizer=ShellTokenizer(verbose=False, debug=True).tokenize_command,
+    # IP ADDRESS NORMALIZATION
+    preprocessor=lambda x: re.sub(r"(?:[0-9]{1,3}\.){3}[0-9]{1,3}", "IPADDRESS", x),
+    token_pattern=None,
+    max_features=1000
 )
 
 bb = hv2.fit_transform(X_raw)
