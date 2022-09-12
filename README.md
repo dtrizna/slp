@@ -2,12 +2,28 @@
 
 SLP provides a tokenization and encoder classes for parsing of Unix/Linux shell commands, so raw commands (e.g. from `auditd` logs or bash history) can be used for Machine Learning purposes.
 
-:warning: This is Proof-of-Concept (PoC) realization, pre-alpha software.
-
 <p align="center"><img src="img/Tux_wordcloud.png" alt="WordCloud of most common elements" width="250"/>
 
+:warning: This is Proof-of-Concept (PoC) realization, pre-alpha software. Tokenization is comparatively time consuming. Approach that is significantly faster than  `slp.ShellTokenizer`, but provides good results is as follows:
 
-# Evaluation
+```python
+import re
+from nltk.tokenize import WordPunctTokenizer
+from sklearn.feature_extraction.text import HashingVectorizer
+
+N_FEATURES = 1000
+wpt = WordPunctTokenizer()
+hvwpt = HashingVectorizer(
+    lowercase=False,
+    preprocessor=lambda x: re.sub(r"(?:[0-9]{1,3}\.){3}[0-9]{1,3}", "IPADDRESS", x),
+    tokenizer=wpt.tokenize,
+    token_pattern=None,
+    n_features=N_FEATURES
+)
+hvwpt.fit_transform(X)
+```
+
+## Evaluation
 
 We performed evaluation of tokenization quality in comparison with alternatives from NLTK's *WordPunctTokenizer* and *WhiteSpaceTokenizer*, which known to be used in industry for IT log parsing.
 
