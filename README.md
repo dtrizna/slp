@@ -1,5 +1,9 @@
 # Shell Language Processing (SLP)
 
+![License](https://img.shields.io/github/license/dtrizna/slp)
+![GitHub last commit](https://img.shields.io/github/last-commit/dtrizna/slp)
+<a href="https://twitter.com/intent/follow?screen_name=ditrizna"><img src="https://img.shields.io/twitter/follow/ditrizna?style=social&logo=twitter" alt="follow on Twitter"></a>
+
 SLP provides a tokenization and encoder classes for parsing of Unix/Linux shell commands, so raw commands (e.g. from `auditd` logs or bash history) can be used for Machine Learning purposes.
 
 <p align="center"><img src="img/Tux_wordcloud.png" alt="WordCloud of most common elements" width="250"/>
