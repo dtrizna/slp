@@ -96,7 +96,7 @@ ssh -t example.com "screen -r"
 chmod a+x myscript.sh
 chmod a+x $pathToShell"myShell.sh"
 sudo chmod u+s `which Xvfb`
-ssh -fL 127.0.0.1:someport:host.in.the.remote.net:22 proxy.host
+ssh -fL example.com:someport:host.in.the.remote.net:22 proxy.host
 yes no | <command>
 yes 1 | command
 yes n | rm -ir dir1 dir2 dir3
@@ -137,7 +137,7 @@ rsync -avz --progress local/path/some_file usr@example.com:"/some/path/"
 rsync -avzru --delete-excluded server:/media/10001/music/ /media/Incoming/music/
 rsync -avzru --delete-excluded /media/Incoming/music/ server:/media/10001/music/
 rsync -av --exclude '*.svn' user@server:/my/dir .
-rsync -avv 127.0.0.1:path/to/application.ini ./application.ini
+rsync -avv example.com:path/to/application.ini ./application.ini
 rsync -avz -e "ssh -p $portNumber" user@example.com:/path/to/copy /local/path
 rsync -chavzP --stats user@example.com:/path/to/copy /path/to/local/storage
 rsync -chavzP --stats /path/to/copy user@example.com:/path/to/local/storage
@@ -3812,7 +3812,7 @@ find . | grep ".xml$" | parallel bzip2
 for i in `find . | grep ".xml$"`; do bzip2 $i&; done
 for i in `find . | grep ".xml$"`; do bzip2 $i; done
 find ~ -name 'xx*' -and -not -name 'xxx'
-find -name \*.jsp | sed 's/^/http:\/\/127.0.0.1/server/g' | xargs -n 1 wget
+find -name \*.jsp | sed 's/^/http:\/\/example.com/server/g' | xargs -n 1 wget
 find . -name "*.txt" -print
 find . -name "*.txt" -print | less
 find . -inum 968746 -exec rm -i {} \;
@@ -4399,7 +4399,7 @@ ifconfig en0 | grep inet | grep -v inet6 | awk '{print $2}'
 ifconfig eth0 | grep 'inet addr:' | awk '{print $2}' | awk -F ':' '{print $2}'
 netstat -rn | gawk '/UG/ {print $NF}' | xargs ifconfig | gawk 'match($0,/inet addr:(.*) B/,a) {print a[1]}'
 ifconfig | grep 192.168.111 | awk '{print $2}'
-ifconfig | grep -v '127.0.0.1' | sed -n 's/.*inet addr:\([0-9.]\+\)\s.*/\1/p'
+ifconfig | grep -v 'example.com' | sed -n 's/.*inet addr:\([0-9.]\+\)\s.*/\1/p'
 ifconfig | sed -n 's/.*inet addr:\([0-9.]\+\)\s.*/\1/p'
 ps -A -o pid | xargs -I pid readlink "/proc/pid/exe" | xargs -I file dirname "file"
 pgrep -u w | grep ssh| awk '{print $1}' ssh
@@ -4650,7 +4650,7 @@ find path -type f -printf '%s\n' | awk '{sum += $1} END {print sum}'
 top -l 1 -s 0 -i 1 -stats vprvt -pid PID
 top -l 1 -s 0 -stats mem -pid PID
 top -l 1 -s 0 -stats vprvt -pid 8631
-NET_IP=`ifconfig ${NET_IF} | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'`
+NET_IP=`ifconfig ${NET_IF} | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v 'example.com'`
 ifconfig en0 | awk '$1 == "inet" {print $2}'
 ifconfig en0 | awk '/inet addr/{print substr($2,6)}'
 ip addr show en0 | awk '$1 == "inet" {gsub(/\/.*$/, "", $2); print $2}'
@@ -4666,19 +4666,19 @@ ifconfig eth0 | grep -oP '(?<= inet addr:)[^ ]+'
 ifconfig eth0 | grep inet | cut -d: -f2 | cut -d' ' -f1
 /sbin/ifconfig $(netstat -nr | tail -1 | awk '{print $NF}') | awk -F: '/inet /{print $2}' | cut -f1 -d ' '
 ifconfig eth0 | grep addr: | awk '{ print $2 }' | cut -d: -f2
-ifconfig  | grep 'inet addr:' | grep -v '127.0.0.1' | awk -F: '{print $2}' | awk '{print $1}' | head -1
-ifconfig | grep 'inet addr:' | grep -v 127.0.0.1 | head -n1 | cut -f2 -d: | cut -f1 -d ' '
-ifconfig | grep -E "([0-9]{1,3}\.){3}[0-9]{1,3}" | grep -v 127.0.0.1 | awk '{ print $2 }' | cut -f2 -d:
+ifconfig  | grep 'inet addr:' | grep -v 'example.com' | awk -F: '{print $2}' | awk '{print $1}' | head -1
+ifconfig | grep 'inet addr:' | grep -v example.com | head -n1 | cut -f2 -d: | cut -f1 -d ' '
+ifconfig | grep -E "([0-9]{1,3}\.){3}[0-9]{1,3}" | grep -v example.com | awk '{ print $2 }' | cut -f2 -d:
 ifconfig | grep -A2 "venet0:0\|eth0" | grep 'inet addr:' | sed -r 's/.*inet addr:([^ ]+).*/\1/' | head -1
 ifconfig $(netstat -rn | grep -E "^default|^0.0.0.0" | head -1 | awk '{print $NF}') | grep 'inet ' | awk '{print $2}' | grep -Eo '([0-9]*\.){3}[0-9]*'
 ifconfig `ip route | grep default | head -1 | sed 's/\(.*dev \)\([a-z0-9]*\)\(.*\)/\2/g'` | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b" | head -1
 ip=$(ifconfig | grep -oP "(?<=inet addr:).*?(?=Bcast)")
-ifconfig | awk -F':' '/inet addr/&&!/127.0.0.1/{split($2,_," ");print _[1]}'
-ifconfig | grep 'inet' | grep -v '127.0.0.1' | awk '{print $2}' | sed 's/addr://'
-ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'
+ifconfig | awk -F':' '/inet addr/&&!/example.com/{split($2,_," ");print _[1]}'
+ifconfig | grep 'inet' | grep -v 'example.com' | awk '{print $2}' | sed 's/addr://'
+ifconfig  | grep 'inet addr:'| grep -v 'example.com' | cut -d: -f2 | awk '{ print $1}'
 ifconfig | grep -oP "(?<=inet addr:).*?(?=  Bcast)"
 ifconfig | grep -oP "(?<=inet addr:).*?(?=Bcast)"
-ifconfig | grep -E "([0-9]{1,3}\.){3}[0-9]{1,3}" | grep -v 127.0.0.1 | awk '{ print $2 }' | cut -f2 -d:
+ifconfig | grep -E "([0-9]{1,3}\.){3}[0-9]{1,3}" | grep -v example.com | awk '{ print $2 }' | cut -f2 -d:
 ifconfig | grep ad.*Bc | cut -d: -f2 | awk '{ print $1}'
 ifconfig eth0 | grep -Eo ..\(\:..\){5}
 ifconfig eth0 | grep -o -E '([[:xdigit:]]{1,2}:){5}[[:xdigit:]]{1,2}'
@@ -4695,17 +4695,17 @@ ifconfig -a | awk '/^[a-z]/ { iface=$1; mac=$NF; next } /inet addr:/ { print mac
 ifconfig | awk '$0 ~ /HWaddr/ { print $5 }'
 fg
 fg 1
-ifconfig | grep "inet addr:" | grep -v "127.0.0.1" | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}'  | head -1
+ifconfig | grep "inet addr:" | grep -v "example.com" | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}'  | head -1
 apropos -r '^std' | vi -
 fg 2
 go=$(dig -x 8.8.8.8| awk '/PTR[[:space:]]/{print $NF}')
 $dig -x 8.8.8.8 | grep  PTR | grep -o google.*
 dig -x 8.8.8.8 | awk '/PTR[[:space:]]/{print $NF}'
 dig -x 8.8.8.8 | grep PTR | cut -d ' ' -f 2 | grep google | cut -f 5
-/sbin/ifconfig  | sed -ne $'/127.0.0.1/ ! { s/^[ \t]*inet[ \t]\\{1,99\\}\\(addr:\\)\\{0,1\\}\\([0-9.]*\\)[ \t\/].*$/\\2/p; }'
+/sbin/ifconfig  | sed -ne $'/example.com/ ! { s/^[ \t]*inet[ \t]\\{1,99\\}\\(addr:\\)\\{0,1\\}\\([0-9.]*\\)[ \t\/].*$/\\2/p; }'
 ifconfig | awk -F"[ :]+" '/inet addr/ && !/127.0/ {print $4}'
-ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'
-ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p'
+ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v 'example.com'
+ifconfig | sed -En 's/example.com//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p'
 git diff --name-only | xargs dirname | uniq
 rest_cmd=$(shopt -p dotglob)
 ifconfig en0 | grep inet | grep -v inet6
@@ -6229,7 +6229,7 @@ mount | grep -i "/dev/sd.*" | awk '{ print NR "\t" $1 "\t" $3 }' > mount_output 
 df -h |  awk '{print $1}'
 diff -q /dir1 /dir2 | grep /dir1 | grep -E "^Only in*" | sed -n 's/[^:]*: //p'
 svn status |  grep '\!' | cut -d\  -f2-
-dig @"127.0.0.1"  _etcd-client._tcp. SRV
+dig @"example.com"  _etcd-client._tcp. SRV
 find . ! -local -prune -o -print
 who | awk '{ if (NR!=1 && NR!=2) {print} }' | sed -e 's/ /, /g'
 finger -l | awk '/^Login/'
@@ -6321,7 +6321,7 @@ pstree | cat
 tee
 readlink /dev/disk/by-uuid/b928a862-6b3c-45a8-82fe-8f1db2863be3
 dig -x 72.51.34.34
-dig -x 127.0.0.1
+dig -x example.com
 j=`echo $i | rev | cut -d "." -f2`;
 yes '' | nl -ba | sed -n -e 11,24p -e 24q
 echo $string | cut -d';' -f2
@@ -6520,7 +6520,7 @@ echo Hello world | od -t x1 -t c
 finger $username | awk '/^Directory/ {print $2}'
 finger $USER_NAME | grep Directory | expand | cut -d ' ' -f 2
 hostname
-ping -c 2 -n 127.0.0.1 | awk -F'[ =]' -v OFS='\t' 'NR>1 { print $6, $10 }'
+ping -c 2 -n example.com | awk -F'[ =]' -v OFS='\t' 'NR>1 { print $6, $10 }'
 echo hello world | tee  >(awk '{print $2, $1}')
 echo hello world | tee /dev/tty | awk '{print $2, $1}'
 cat /proc/config.gz | gunzip
@@ -9066,7 +9066,7 @@ ping ${ip} -I eth9 -c 1
 ping -c 1 $remote_machine
 ping -W 1 -c 1 10.0.0.$i | grep 'from' &
 ping -c 1 192.168.1.$COUNTER | grep 'ms'
-ping -c 1 127.0.0.1 #ping your adress once
+ping -c 1 example.com #ping your adress once
 ping youhostname.local
 ping -w 1 $c
 cat my_ips | xargs -i dig -x {} +short
@@ -9601,7 +9601,7 @@ yum --enablerepo=remi upgrade php-mbstring
 cat <(yes | tr \\n x | head -c $BYTES) <(sleep $SECONDS) | grep n
 yes | tr \\n x | head -c $BYTES | pv | grep n
 yes | tr \\n x | head -c $BYTES | grep n
-who --ips /var/log/wtmp | grep '^msw.*127.0.0.1'
+who --ips /var/log/wtmp | grep '^msw.*example.com'
 find . -type f -name "composer.json" -exec composer validate {} \;
 ssh -F vagrant-ssh default
 grep -b -o $'\x0c' filename | less
@@ -9659,7 +9659,7 @@ fold -w30 longline
 fold -w30 -s longline
 fold -w79 yourfile | sed -e :a -e 's/^.\{0,78\}$/& /;ta'
 fold -w 10
-echo 127.0.0.1 ad.doubleclick.net | sudo tee -a /etc/hosts
+echo example.com ad.doubleclick.net | sudo tee -a /etc/hosts
 echo '2-1' |sudo tee /sys/bus/usb/drivers/usb/unbind
 echo '2-1.1.1'|sudo tee /sys/bus/usb/drivers/usb/unbind
 echo "Australia/Adelaide" | sudo tee /etc/timezone
@@ -10680,7 +10680,7 @@ find / -type f -printf "\n%AD %AT %p" | head -n 11
 find .
 find .
 curl -L -C - -b "oraclelicense=accept-securebackup-cookie" -O http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip
-curl http://127.0.0.1:8000 -o index.html
+curl http://example.com:8000 -o index.html
 curl http://example.com/textfile.txt -o textfile.txt
 curl -s http://page.that.serves.json.com/json/ | json_xs
 curl -s http://search.twitter.com/search.json?q=node.js | json
@@ -12566,7 +12566,7 @@ ssh myusername@ssh.myhost.net "mkdir -p $2"
 ssh $(vagrant ssh-config | awk 'NR>1 {print " -o "$1"="$2}') localhost
 ssh `vagrant ssh-config | tail -8 | perl -pe 's/^\s+/-o@/; s/\s/\=/;s/@/ /;s/\n/ /'` vagrant@localhost
 vagrant ssh-config --host default | ssh -F /dev/stdin default
-ssh vagrant@127.0.0.1 -p 2222 -o Compression=yes -o DSAAuthentication=yes -o LogLevel=FATAL -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o IdentitiesOnly=yes -i ~/.vagrant.d/less_insecure_private_key -o ForwardAgent=yes
+ssh vagrant@example.com -p 2222 -o Compression=yes -o DSAAuthentication=yes -o LogLevel=FATAL -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o IdentitiesOnly=yes -i ~/.vagrant.d/less_insecure_private_key -o ForwardAgent=yes
 ssh $(vagrant ssh-config HOST | sed '/^[[:space:]]*$/d' |  awk 'NR>1 {print " -o "$1"="$2}') localhost
 ssh -p 10022 localhost
 ssh -p 4444 localhost
