@@ -1,7 +1,8 @@
-import numpy as np
+import re
 import bashlex
 import logging
-import re
+import numpy as np
+from tqdm import tqdm
 from collections import Counter, defaultdict
 from sklearn.preprocessing import LabelEncoder
 from scipy.sparse import csr_matrix
@@ -138,10 +139,7 @@ class ShellTokenizer():
     
     def tokenize_corpus(self, corpus):
         l = len(corpus)
-        for i, command in enumerate(corpus):
-            if self.verbose:
-                print(f"[*] Parsing in process: {i+1}/{l}", end="\r")
-            
+        for i, command in tqdm(enumerate(corpus), desc="[*] Tokenizing commands", total=l):
             self.tokenized_corpus.append(self.tokenize_command(command, i=i))
         return self.tokenized_corpus, self.global_counter
     
