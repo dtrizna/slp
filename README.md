@@ -2,29 +2,31 @@
 
 ![License](https://img.shields.io/github/license/dtrizna/slp)
 ![GitHub last commit](https://img.shields.io/github/last-commit/dtrizna/slp)
-<a href="https://twitter.com/intent/follow?screen_name=ditrizna"><img src="https://img.shields.io/twitter/follow/ditrizna?style=social&logo=twitter" alt="follow on Twitter"></a>
+
+<a href="https://x.com/intent/follow?screen_name=ditrizna"><img src="https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white" alt="follow on X"></a>
+<a href="https://www.linkedin.com/in/ditrizna/"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="follow on LinkedIn"></a>
+
+## Description
 
 SLP provides a tokenization and encoder classes for parsing of Unix/Linux shell commands, so raw commands (e.g. from `auditd` logs or bash history) can be used for Machine Learning purposes.
 
 <p align="center"><img src="img/Tux_wordcloud.png" alt="WordCloud of most common elements" width="250"/>
 
-:warning: This is Proof-of-Concept (PoC) realization, pre-alpha software. Tokenization is comparatively time consuming. Approach that is significantly faster than  `slp.ShellTokenizer`, but provides good results is as follows:
+### Citation
 
-```python
-import re
-from nltk.tokenize import WordPunctTokenizer
-from sklearn.feature_extraction.text import HashingVectorizer
+This is an accompanying repository to CAMLIS 2021 publication, available on [arxiv](https://arxiv.org/abs/2107.02438).
+If you're inspired by this work, please cite me:
 
-N_FEATURES = 1000
-wpt = WordPunctTokenizer()
-hvwpt = HashingVectorizer(
-    lowercase=False,
-    preprocessor=lambda x: re.sub(r"(?:[0-9]{1,3}\.){3}[0-9]{1,3}", "IPADDRESS", x),
-    tokenizer=wpt.tokenize,
-    token_pattern=None,
-    n_features=N_FEATURES
-)
-hvwpt.fit_transform(X)
+```
+@misc{trizna2022slp,
+      title={Shell Language Processing: Unix command parsing for Machine Learning}, 
+      author={Dmitrijs Trizna},
+      year={2022},
+      eprint={2107.02438},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2107.02438}, 
+}
 ```
 
 ## Evaluation
@@ -54,22 +56,6 @@ All commands are normalized: domain names are replaced by *example.com* and all 
 For classification we train a gradient boosting ensemble of decision trees, with the specific realization from [XGBoost](https://xgboost.readthedocs.io/en/latest/).
 
 Experiments can be observed or replicated in [this notebook](https://github.com/dtrizna/slp/blob/main/examples/security_classification.ipynb).
-
-## Citation
-
-If you are inspired, and you develop these ideas further or use parts of code in your own research, please cite us:
-
-```bibtex
-@misc{trizna2021shell,
-      title={Shell Language Processing: Unix command parsing for Machine Learning}, 
-      author={Dmitrijs Trizna},
-      year={2021},
-      howpublished={In Proceedings of Conference on Applied Machine Learning for Information Security (CAMLIS '21)},
-      eprint={2107.02438},
-      archivePrefix={arXiv},
-      primaryClass={cs.LG}
-}
-```
 
 ## Example usage
 
@@ -118,6 +104,28 @@ At this point data is ready to be supplied as input for your ML model:
 mymodel.fit(X_tfidf, y)
 ```
 
+### Operational WARNING
+
+:warning: This is Proof-of-Concept (PoC) realization, pre-alpha software. Tokenization is comparatively time consuming. Approach that is significantly faster than  `slp.ShellTokenizer`, but provides good results is as follows:
+
+```python
+import re
+from nltk.tokenize import WordPunctTokenizer
+from sklearn.feature_extraction.text import HashingVectorizer
+
+N_FEATURES = 1000
+wpt = WordPunctTokenizer()
+hvwpt = HashingVectorizer(
+    lowercase=False,
+    preprocessor=lambda x: re.sub(r"(?:[0-9]{1,3}\.){3}[0-9]{1,3}", "IPADDRESS", x),
+    tokenizer=wpt.tokenize,
+    token_pattern=None,
+    n_features=N_FEATURES
+)
+hvwpt.fit_transform(X)
+```
+
+
 ## Execute within a Docker :whale: environment
 
 SLP is available via the [Docker Hub](https://hub.docker.com/repository/docker/dtrizna/slp).
@@ -141,3 +149,4 @@ Evaluate your code from within docker container as follows:
 - Some ideas of exploratory data analysis, visualiations and examples can be found under `/eda/` and under `/examples/`:
 
 <img src="img/roc_tfidf.png" alt="ROC curve for Cross-Validation of TF-IDF encoded data" width="700">
+
